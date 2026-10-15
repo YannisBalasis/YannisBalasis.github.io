@@ -347,13 +347,13 @@
       <div class="feature-head">
         <span class="kicker">Master's thesis · Manuscript under review at <em>Applied Intelligence</em></span>
         <h3 class="feature-title">Brain tumor MRI classification with explainable deep learning</h3>
-        <p class="feature-lede">A systematic, statistically grounded comparison of nine deep learning architectures for four-class brain tumor MRI (glioma, meningioma, pituitary, no tumor) on 7,023 scans, including my own TensorFlow implementation of the hybrid CNN–Transformer MedViT V2 and a new dual-branch feature-fusion extension.</p>
+        <p class="feature-lede">A systematic, statistically grounded comparison of nine deep learning architectures for four-class brain tumor MRI (glioma, meningioma, pituitary, no tumor) on 7,023 MRI images, including my own TensorFlow implementation of the hybrid CNN–Transformer MedViT V2 and a new dual-branch feature-fusion extension.</p>
       </div>
 
       <div class="stats">
         <div><b>9</b><span>architectures compared</span></div>
-        <div><b>98.60%</b><span>best accuracy (custom CNN)</span></div>
-        <div><b>98.15%</b><span>MedViT V2 Dual, statistically equivalent (p = 0.240)</span></div>
+        <div><b>98.15%</b><span>best multiclass accuracy, MedViT V2 Dual</span></div>
+        <div><b>98.01%</b><span>4-Class CNN, only 1.28 M parameters</span></div>
         <div><b>4</b><span>XAI methods cross-checked</span></div>
       </div>
 
@@ -369,15 +369,15 @@
         <div class="paradox">
           <span class="kicker">Key finding</span>
           <h4>The Meningioma Paradox</h4>
-          <p>Every model localizes meningiomas correctly at the pixel level, as confirmed by all four attribution methods, yet meningioma is consistently the hardest class to classify. The failure lies in the decision boundary in feature space, not in where the model looks — a distinction that only shows up when explainability is analysed systematically.</p>
+          <p>Every model localizes meningiomas in their expected extra-axial position, consistently across attribution methods, yet meningioma has the lowest per-class F1 in every four-class model. The failure lies in the decision boundary in feature space, not in where the model looks — a distinction that only shows up when explainability is analysed systematically.</p>
         </div>
         <div>
           <h4>What I built</h4>
           <ul>
-            <li>Custom CNNs, transfer-learning baselines (EfficientNet-B3, ResNet-50), Vision Transformers and a 1-vs-1 ensemble, trained under one protocol.</li>
+            <li>Custom CNNs, a 1-vs-1 ensemble, transfer-learning dual-branch systems (EfficientNet-B3, ResNet-50), a multi-task dual system and the MedViT V2 hybrid CNN–Transformer (single- and dual-branch), trained under one protocol.</li>
             <li>Non-parametric evaluation: Friedman, Nemenyi critical-difference, Bonferroni-corrected Wilcoxon and Cohen's d across all model pairs.</li>
-            <li>Explainability with Grad-CAM, SHAP, Integrated Gradients and Occlusion, with bootstrap confidence intervals.</li>
-            <li>A Streamlit decision-support prototype: consensus voting across architectures, interactive XAI and automated PDF reports.</li>
+            <li>Explainability with Grad-CAM, SHAP, Integrated Gradients and Occlusion, with bootstrap confidence intervals (B = 10,000) on occlusion confidence drops.</li>
+            <li>A Streamlit decision-support prototype: consensus voting across seven models, interactive XAI and automated PDF reports, plus an in-browser demo of the 4-Class CNN with live Grad-CAM.</li>
           </ul>
         </div>
       </div>
@@ -491,7 +491,7 @@
         <h3>Master's Thesis Research</h3>
         <div class="where">University of Patras</div>
         <ul>
-          <li>Systematic comparison of CNNs, transfer learning and Vision Transformers for 4-class brain tumor MRI.</li>
+          <li>Systematic comparison of nine architectures (custom CNNs, transfer learning and hybrid CNN–Transformers) for 4-class brain tumor MRI.</li>
           <li>Friedman, Nemenyi and Bonferroni-corrected Wilcoxon tests with Cohen's d across all models.</li>
           <li>Grad-CAM, SHAP, Integrated Gradients and Occlusion analysis.</li>
         </ul>
