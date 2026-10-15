@@ -84,7 +84,15 @@
   nav .wrap { display: flex; gap: 20px; align-items: center; height: 52px; overflow-x: auto; }
   nav a { color: var(--muted); text-decoration: none; font-size: 14px; white-space: nowrap; }
   nav a:hover { color: var(--text); }
-  nav .brand { font-family: "Newsreader", serif; font-size: 18px; color: var(--text); margin-right: auto; }
+  nav .brand { font-family: "Newsreader", serif; font-size: 18px; color: var(--text); margin-right: auto; display: inline-flex; align-items: center; gap: 9px; text-decoration: none; }
+  .nav-av {
+    width: 30px; height: 30px; border-radius: 50%; object-fit: cover; flex: none;
+    box-shadow: 0 0 0 1px var(--line);
+    opacity: 0; transform: translateX(-6px); width: 0; margin: 0;
+    transition: opacity .4s ease, transform .4s ease, width .4s ease;
+  }
+  body.past-hero .nav-av { opacity: 1; transform: none; width: 30px; }
+  @media (min-width: 1320px) { .nav-av { display: none; } }
 
   header { padding: 72px 0 40px; }
   .stain {
@@ -152,7 +160,7 @@
   /* Featured thesis — breaks out of the text column on wide screens */
   .feature {
     position: relative; left: 50%; transform: translateX(-50%);
-    width: min(1000px, calc(100vw - 32px));
+    width: min(900px, calc(100vw - 32px));
     background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
     padding: 32px; margin-bottom: 18px; overflow: hidden;
   }
@@ -232,6 +240,28 @@
     border-radius: 6px; padding: 4px 8px; cursor: pointer; font-size: 13px;
   }
 
+  /* Floating profile dock — slides in from the left once the hero scrolls away */
+  .dock {
+    position: fixed; top: 100px; left: max(16px, calc(50vw - 646px)); width: 176px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px;
+    opacity: 0; transform: translateX(-18px); pointer-events: none;
+    transition: opacity .5s ease, transform .5s ease; z-index: 5;
+    box-shadow: 0 12px 34px rgba(75,58,140,0.12);
+  }
+  body.past-hero .dock { opacity: 1; transform: none; pointer-events: auto; }
+  .dock-av {
+    width: 64px; height: 64px; border-radius: 50%; object-fit: cover;
+    border: 2px solid var(--surface); box-shadow: 0 0 0 1px var(--line);
+  }
+  .dock-name { font-family: "Newsreader", serif; font-size: 20px; margin-top: 12px; line-height: 1.1; }
+  .dock-role { font-size: 13px; color: var(--muted); margin-top: 5px; line-height: 1.4; }
+  .dock-where { font-size: 12px; color: var(--hema); margin-top: 8px; line-height: 1.35; }
+  .dock-links { display: flex; flex-direction: column; gap: 7px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+  .dock-links a { font-size: 13.5px; color: var(--muted); text-decoration: none; }
+  .dock-links a:hover { color: var(--hema); }
+  @media (max-width: 1319px) { .dock { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .dock { transition: opacity .2s linear; transform: none; } }
+
   @media (max-width: 760px) {
     .feature { padding: 22px 18px; }
     .stats { grid-template-columns: repeat(2, 1fr); }
@@ -253,7 +283,7 @@
 
 <nav>
   <div class="wrap">
-    <a class="brand" href="#">I. Balasis</a>
+    <a class="brand" href="#"><img class="nav-av" src="profile.jpg" alt="" width="30" height="30">I. Balasis</a>
     <a href="#research">Research</a>
     <a href="#publications">Publications</a>
     <a href="#experience" class="hide-sm">Experience</a>
@@ -261,6 +291,19 @@
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">◐</button>
   </div>
 </nav>
+
+<aside class="dock" id="dock" aria-hidden="true">
+  <img class="dock-av" src="profile.jpg" alt="Ioannis Balasis" width="64" height="64">
+  <div class="dock-name">Ioannis Balasis</div>
+  <div class="dock-role">AI for medical imaging &amp; computational pathology</div>
+  <div class="dock-where">Karolinska Institutet · Stockholm</div>
+  <div class="dock-links">
+    <a href="mailto:balasisgiannis5@gmail.com">Email</a>
+    <a href="https://github.com/YannisBalasis" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://linkedin.com/in/ioannis-balasis" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="CV_Ioannis_Balasis.pdf" target="_blank" rel="noopener">CV (PDF)</a>
+  </div>
+</aside>
 
 <main class="wrap">
 
@@ -414,7 +457,7 @@
     <h2>Experience</h2>
 
     <div class="item">
-      <div class="when">Sep 2026 – Present</div>
+      <div class="when">Sep 2026 – Feb 2027</div>
       <div>
         <h3>Erasmus+ Research Trainee, Computational Pathology</h3>
         <div class="where">Karolinska Institutet, Dept. of Oncology-Pathology · Stockholm<br>Supervisors: Prof. Johan Hartman, Dr. Balázs Ács</div>
@@ -523,6 +566,21 @@
     root.dataset.theme = isDark ? 'light' : 'dark';
     try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
   });
+
+  // Slide the floating profile dock in once the hero has scrolled past the nav.
+  (function () {
+    var header = document.querySelector('header');
+    var dock = document.getElementById('dock');
+    if (!header || !dock || !('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        var show = !e.isIntersecting;
+        document.body.classList.toggle('past-hero', show);
+        dock.setAttribute('aria-hidden', show ? 'false' : 'true');
+      });
+    }, { rootMargin: '-130px 0px 0px 0px', threshold: 0 });
+    io.observe(header);
+  })();
 </script>
 </body>
 </html>
