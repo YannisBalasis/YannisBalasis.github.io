@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ioannis Balasis — AI for Medical Imaging &amp; Computational Pathology</title>
+<meta name="description" content="Ioannis Balasis — computer engineer working on deep learning for medical imaging and computational pathology, currently a research trainee at Karolinska Institutet, Stockholm.">
+<meta name="author" content="Ioannis Balasis">
+<meta name="keywords" content="Ioannis Balasis, deep learning, medical imaging, computational pathology, brain tumor MRI, explainable AI, Karolinska Institutet, University of Patras">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yannisbalasis.github.io/">
+
+<!-- Open Graph / LinkedIn / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ioannis Balasis">
+<meta property="og:title" content="Ioannis Balasis — AI for Medical Imaging & Computational Pathology">
+<meta property="og:description" content="Computer engineer working on deep learning for medical imaging and computational pathology. Research trainee at Karolinska Institutet, Stockholm.">
+<meta property="og:url" content="https://yannisbalasis.github.io/">
+<meta property="og:image" content="https://yannisbalasis.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Ioannis Balasis — AI for medical imaging and computational pathology">
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Ioannis Balasis — AI for Medical Imaging & Computational Pathology">
+<meta name="twitter:description" content="Computer engineer working on deep learning for medical imaging and computational pathology.">
+<meta name="twitter:image" content="https://yannisbalasis.github.io/og-image.png">
+
+<!-- Favicon: IB monogram in H&E colors -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%234b3a8c'/%3E%3Cstop offset='1' stop-color='%23c2477a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='34' font-weight='bold' fill='white' text-anchor='middle'%3EIB%3C/text%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fbf9f7;
+    --surface: #ffffff;
+    --text: #1d1a22;
+    --muted: #625c6b;
+    --line: #e7e2e8;
+    --hema: #4b3a8c;   /* hematoxylin */
+    --eosin: #c2477a;  /* eosin */
+    --chip: #f1edf6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141218;
+      --surface: #1c1922;
+      --text: #ece8f1;
+      --muted: #a39cad;
+      --line: #2e2a36;
+      --hema: #a99bf0;
+      --eosin: #f08bb4;
+      --chip: #25212d;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141218; --surface: #1c1922; --text: #ece8f1; --muted: #a39cad;
+    --line: #2e2a36; --hema: #a99bf0; --eosin: #f08bb4; --chip: #25212d;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.65 "IBM Plex Sans", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--hema); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:hover { color: var(--eosin); }
+
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 16px; }
+
+  nav {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  nav .wrap { display: flex; gap: 20px; align-items: center; height: 52px; overflow-x: auto; }
+  nav a { color: var(--muted); text-decoration: none; font-size: 14px; white-space: nowrap; }
+  nav a:hover { color: var(--text); }
+  nav .brand { font-family: "Newsreader", serif; font-size: 18px; color: var(--text); margin-right: auto; }
+
+  header { padding: 72px 0 40px; }
+  .stain {
+    height: 6px; width: 96px; border-radius: 3px; margin-bottom: 28px;
+    background: linear-gradient(90deg, var(--hema), var(--eosin));
+  }
+  h1 {
+    font-family: "Newsreader", serif; font-weight: 500;
+    font-size: clamp(40px, 8vw, 58px); line-height: 1.05; margin: 0 0 16px;
+    letter-spacing: -0.01em;
+  }
+  .hero { display: flex; gap: 28px; align-items: center; margin-bottom: 24px; }
+  .avatar {
+    width: 150px; height: 150px; border-radius: 50%; object-fit: cover; flex: none;
+    border: 3px solid var(--surface);
+    box-shadow: 0 0 0 1px var(--line), 0 10px 30px rgba(75,58,140,0.14);
+  }
+  .hero-text { min-width: 0; }
+  .hero h1 { margin: 0 0 12px; }
+  .hero .lede { margin: 0; }
+  .lede { font-size: 19px; color: var(--muted); margin: 0 0 24px; max-width: 600px; }
+  .lede em { font-family: "Newsreader", serif; font-size: 21px; color: var(--text); }
+  .now {
+    display: inline-flex; gap: 10px; align-items: center;
+    background: var(--surface); border: 1px solid var(--line);
+    padding: 8px 14px; border-radius: 999px; font-size: 14px; margin-bottom: 28px;
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--eosin); flex: none;
+         box-shadow: 0 0 0 4px color-mix(in srgb, var(--eosin) 22%, transparent); }
+  .links { display: flex; flex-wrap: wrap; gap: 10px; }
+  .btn {
+    display: inline-block; padding: 9px 16px; border-radius: 8px; font-size: 14px; font-weight: 500;
+    border: 1px solid var(--line); background: var(--surface); color: var(--text); text-decoration: none;
+  }
+  .btn:hover { border-color: var(--hema); color: var(--hema); }
+  .btn.primary { background: var(--hema); border-color: var(--hema); color: var(--bg); }
+  .btn.primary:hover { background: var(--eosin); border-color: var(--eosin); color: var(--bg); }
+
+  section { padding: 40px 0; border-top: 1px solid var(--line); }
+  h2 {
+    font-family: "IBM Plex Mono", monospace; font-weight: 400; font-size: 13px;
+    text-transform: uppercase; letter-spacing: 0.12em; color: var(--eosin); margin: 0 0 24px;
+  }
+  h3 { font-size: 17px; font-weight: 600; margin: 0; }
+  p { margin: 0 0 14px; }
+
+  .item { display: grid; grid-template-columns: 150px 1fr; gap: 6px 24px; margin-bottom: 30px; }
+  .item:last-child { margin-bottom: 0; }
+  .when { font-family: "IBM Plex Mono", monospace; font-size: 13px; color: var(--muted); padding-top: 3px; }
+  .where { color: var(--muted); font-size: 15px; margin: 2px 0 8px; }
+  .item ul { margin: 0; padding-left: 18px; }
+  .item li { margin-bottom: 4px; }
+  .item li::marker { color: var(--hema); }
+
+  .pub {
+    background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--hema);
+    border-radius: 8px; padding: 18px 20px;
+  }
+  .pub .title { font-family: "Newsreader", serif; font-size: 20px; line-height: 1.35; margin: 4px 0 8px; }
+  .tag {
+    display: inline-block; font-size: 12px; font-family: "IBM Plex Mono", monospace;
+    padding: 2px 8px; border-radius: 4px; background: var(--chip); color: var(--muted);
+  }
+
+  /* Featured thesis — breaks out of the text column on wide screens */
+  .feature {
+    position: relative; left: 50%; transform: translateX(-50%);
+    width: min(1000px, calc(100vw - 32px));
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+    padding: 32px; margin-bottom: 18px; overflow: hidden;
+  }
+  .feature::before {
+    content: ""; position: absolute; inset: 0 0 auto 0; height: 4px;
+    background: linear-gradient(90deg, var(--hema), var(--eosin));
+  }
+  .kicker { font-family: "IBM Plex Mono", monospace; font-size: 12px; letter-spacing: 0.04em; color: var(--eosin); }
+  .kicker em { font-style: italic; }
+  .feature-title {
+    font-family: "Newsreader", serif; font-weight: 500; font-size: clamp(26px, 4vw, 34px);
+    line-height: 1.15; margin: 8px 0 12px;
+  }
+  .feature-lede { font-size: 17px; color: var(--muted); max-width: 760px; margin: 0; }
+  .stats {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; margin: 26px 0;
+    background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden;
+  }
+  .stats div { background: var(--surface); padding: 16px 18px; }
+  .stats b { display: block; font-family: "Newsreader", serif; font-weight: 500; font-size: 30px; color: var(--hema); line-height: 1.1; }
+  .stats span { font-size: 13px; color: var(--muted); line-height: 1.35; display: block; margin-top: 4px; }
+  .figure { margin: 0 0 26px; }
+  .figure img {
+    display: block; width: 100%; height: auto; border-radius: 8px;
+    background: #fff; padding: 8px; border: 1px solid var(--line);
+  }
+  .figure figcaption { font-size: 13px; color: var(--muted); margin-top: 8px; }
+  .feature-sm { margin-top: 18px; }
+  .feature-sm .feature-title { font-size: clamp(22px, 3vw, 28px); }
+  .feature-body { display: grid; grid-template-columns: 1fr 1.2fr; gap: 28px; }
+  .feature-body-even { grid-template-columns: 1.1fr 1fr; margin-top: 8px; }
+  .feature h4 { font-size: 16px; font-weight: 600; margin: 4px 0 8px; }
+  .feature ul { margin: 0; padding-left: 18px; font-size: 15px; }
+  .feature li { margin-bottom: 6px; }
+  .feature li::marker { color: var(--hema); }
+  .paradox {
+    background: var(--chip); border-radius: 10px; padding: 18px 20px;
+    border-left: 3px solid var(--eosin);
+  }
+  .paradox h4 { font-family: "Newsreader", serif; font-weight: 500; font-size: 22px; }
+  .paradox p { font-size: 15px; margin: 0; }
+  .feature-foot {
+    display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between;
+    margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--line);
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chips span { background: var(--chip); padding: 3px 10px; border-radius: 999px; font-size: 13px; }
+
+  .projects { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 22px;
+  }
+  .card h3 { margin-bottom: 6px; }
+  .card p { font-size: 14.5px; color: var(--muted); margin: 0 0 10px; }
+  .stat { font-family: "Newsreader", serif; font-size: 26px; color: var(--hema); line-height: 1; }
+  .stat small { font-family: "IBM Plex Sans", sans-serif; font-size: 13px; color: var(--muted); }
+
+  .sub { margin: 36px 0 14px; font-size: 15px; color: var(--muted); font-weight: 500; }
+  .mini { list-style: none; margin: 0; padding: 0; }
+  .mini li { padding: 14px 0; border-top: 1px dashed var(--line); }
+  .mini li:first-child { border-top: none; padding-top: 0; }
+  .mini a { font-weight: 600; text-decoration: none; }
+  .mini a:hover { text-decoration: underline; }
+  .mini .lang { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--muted); margin-left: 8px; }
+  .mini p { margin: 4px 0 0; font-size: 14.5px; color: var(--muted); }
+
+  .skills { display: grid; grid-template-columns: 150px 1fr; gap: 12px 24px; }
+  .skills dt { font-weight: 500; font-size: 15px; }
+  .skills dd { margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  .skills dd span { background: var(--chip); padding: 3px 10px; border-radius: 999px; font-size: 13.5px; }
+
+  .awards li { margin-bottom: 8px; }
+
+  footer { padding: 40px 0 64px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+  .theme-toggle {
+    margin-left: 4px; background: none; border: 1px solid var(--line); color: var(--muted);
+    border-radius: 6px; padding: 4px 8px; cursor: pointer; font-size: 13px;
+  }
+
+  @media (max-width: 760px) {
+    .feature { padding: 22px 18px; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .feature-body { grid-template-columns: 1fr; gap: 20px; }
+  }
+  @media (max-width: 560px) {
+    .hero { flex-direction: column; align-items: flex-start; gap: 18px; }
+    .avatar { width: 112px; height: 112px; }
+  }
+  @media (max-width: 600px) {
+    header { padding: 48px 0 32px; }
+    .item, .skills { grid-template-columns: 1fr; gap: 2px; }
+    .skills dd { margin-bottom: 12px; }
+    nav .hide-sm { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#">I. Balasis</a>
+    <a href="#research">Research</a>
+    <a href="#publications">Publications</a>
+    <a href="#experience" class="hide-sm">Experience</a>
+    <a href="#contact">Contact</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">◐</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <header>
+    <div class="stain" aria-hidden="true"></div>
+    <div class="hero">
+      <img class="avatar" src="profile.jpg" alt="Ioannis Balasis" width="150" height="150" loading="eager">
+      <div class="hero-text">
+        <h1>Ioannis Balasis</h1>
+        <p class="lede">Computer engineer building <em>deep learning for medical imaging</em> — from brain MRI to whole-slide pathology — with a focus on models clinicians can trust.</p>
+      </div>
+    </div>
+    <div class="now"><span class="dot"></span>Currently: Erasmus+ research trainee at Karolinska Institutet, Stockholm</div>
+    <div class="links">
+      <a class="btn primary" href="mailto:balasisgiannis5@gmail.com">Email me</a>
+      <a class="btn" href="https://github.com/YannisBalasis" target="_blank" rel="noopener">GitHub</a>
+      <a class="btn" href="https://linkedin.com/in/ioannis-balasis" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="btn" href="CV_Ioannis_Balasis.pdf" target="_blank" rel="noopener">CV (PDF)</a>
+    </div>
+  </header>
+
+  <section id="research">
+    <h2>Research interests</h2>
+    <p>I work on deep learning for medical image analysis, mainly MRI and digital pathology. I'm especially interested in explainable and trustworthy AI, computational oncology, and combining imaging with clinical data for precision medicine.</p>
+    <p>My master's thesis compared nine architectures for brain tumor MRI classification under a rigorous statistical framework, and surfaced an architecture-agnostic failure mode on meningioma that I call the <em>Meningioma Paradox</em>. At Karolinska I'm now working on image-based biomarkers and the tumor immune microenvironment in breast cancer.</p>
+  </section>
+
+  <section id="publications">
+    <h2>Publications</h2>
+    <div class="pub">
+      <span class="tag">Under review · 2026</span>
+      <div class="title">Deep Learning Architectures for Brain Tumor MRI Classification: Systematic Comparison with a Novel Hybrid CNN-Transformer, Explainable AI and Statistical Significance Testing</div>
+      <div class="where"><strong>I. Balasis</strong>, C. Makris · <em>Applied Intelligence</em> (Springer Nature)</div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <h2>Selected work</h2>
+    <article class="feature">
+      <div class="feature-head">
+        <span class="kicker">Master's thesis · Manuscript under review at <em>Applied Intelligence</em></span>
+        <h3 class="feature-title">Brain tumor MRI classification with explainable deep learning</h3>
+        <p class="feature-lede">A systematic, statistically grounded comparison of nine deep learning architectures for four-class brain tumor MRI (glioma, meningioma, pituitary, no tumor) on 7,023 scans, including my own TensorFlow implementation of the hybrid CNN–Transformer MedViT V2 and a new dual-branch feature-fusion extension.</p>
+      </div>
+
+      <div class="stats">
+        <div><b>9</b><span>architectures compared</span></div>
+        <div><b>98.60%</b><span>best accuracy (custom CNN)</span></div>
+        <div><b>98.15%</b><span>MedViT V2 Dual, statistically equivalent (p = 0.240)</span></div>
+        <div><b>4</b><span>XAI methods cross-checked</span></div>
+      </div>
+
+      <figure class="figure">
+        <a href="thesis-abstract.png" target="_blank" rel="noopener"><img src="thesis-abstract.png"
+             onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/YannisBalasis/Brain-Cancer-Detection-Thesis/main/graphical_abstract.png'"
+             alt="Graphical abstract: accuracy of nine architectures, Grad-CAM of CNN vs MedViT V2 on a meningioma scan, and per-class F1 showing the Meningioma Paradox."
+             loading="lazy" width="1350" height="600"></a>
+        <figcaption>Graphical abstract: accuracy across the nine architectures, Grad-CAM attention of a CNN vs. MedViT V2, and the per-class F1 dip on meningioma.</figcaption>
+      </figure>
+
+      <div class="feature-body">
+        <div class="paradox">
+          <span class="kicker">Key finding</span>
+          <h4>The Meningioma Paradox</h4>
+          <p>Every model localizes meningiomas correctly at the pixel level, as confirmed by all four attribution methods, yet meningioma is consistently the hardest class to classify. The failure lies in the decision boundary in feature space, not in where the model looks — a distinction that only shows up when explainability is analysed systematically.</p>
+        </div>
+        <div>
+          <h4>What I built</h4>
+          <ul>
+            <li>Custom CNNs, transfer-learning baselines (EfficientNet-B3, ResNet-50), Vision Transformers and a 1-vs-1 ensemble, trained under one protocol.</li>
+            <li>Non-parametric evaluation: Friedman, Nemenyi critical-difference, Bonferroni-corrected Wilcoxon and Cohen's d across all model pairs.</li>
+            <li>Explainability with Grad-CAM, SHAP, Integrated Gradients and Occlusion, with bootstrap confidence intervals.</li>
+            <li>A Streamlit decision-support prototype: consensus voting across architectures, interactive XAI and automated PDF reports.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="feature-foot">
+        <div class="chips"><span>TensorFlow</span><span>Keras</span><span>Vision Transformers</span><span>KAN</span><span>SHAP</span><span>Grad-CAM</span><span>SciPy</span><span>Streamlit</span></div>
+        <a class="btn primary" href="https://github.com/YannisBalasis/Brain-Cancer-Detection-Thesis" target="_blank" rel="noopener">View code on GitHub</a>
+      </div>
+    </article>
+
+    <article class="feature feature-sm">
+      <div class="feature-head">
+        <span class="kicker">iGEM 2025, Paris · Gold Medal · Best Therapeutics Project (Undergraduate) · Top 10 UG Team</span>
+        <h3 class="feature-title">Morphe — computational modeling of a gene-therapy circuit for obesity</h3>
+        <p class="feature-lede">Morphe is a non-invasive, miRNA-based gene therapy that silences HDAC6 in appetite-regulating AgRP neurons to restore leptin and insulin sensitivity. I led the dry lab: the mathematical models that predicted whether the genetic circuit would work before anything went to the bench.</p>
+      </div>
+
+      <div class="feature-body feature-body-even">
+        <div>
+          <h4>What I modeled</h4>
+          <ul>
+            <li><b>HDAC6 knockdown kinetics</b> — an 8-equation ODE system (split-intein transcription factor + shRNA silencing) predicting &gt;95% mRNA and ~87% protein knockdown within 24 h.</li>
+            <li><b>AND-gate logic</b> — deterministic circuit simulation confirming output only when both AgRP and FOXO1 inputs are present, keeping the therapy neuron-specific.</li>
+            <li><b>Inducible systems</b> — AlphaFold3 structures of rtTA and CymR, blind docking of doxycycline and cumate, and ΔG→K<sub>d</sub>→Hill dose-response curves to size safe induction windows.</li>
+            <li><b>Therapeutic efficacy</b> — a 4-ODE model of palmitic-acid insulin resistance showing HDAC6 knockdown restores p-AKT and FOXO1 shuttling (~93% knockdown, FOXO1 ratio recovered from 0.064 to 0.25).</li>
+            <li><b>Target rationale</b> — STRING network and RNA-seq differential-expression analysis placing HDAC6 on the leptin–JAK–STAT3 axis.</li>
+          </ul>
+        </div>
+        <div>
+          <h4>How it mattered</h4>
+          <p>The models set the experimental timeline (24 h knockdown, 30.25 h readout), recommended inducer titration ranges for the wet lab, and provided quantitative benchmarks to validate the circuit against. The work contributed to the team's Gold medal and the Best Therapeutics Project award.</p>
+          <div class="chips" style="margin-top:14px">
+            <span>MATLAB</span><span>SimBiology</span><span>iBioSim</span><span>COPASI</span><span>AlphaFold3</span><span>SwissDock</span><span>Python</span><span>STRING</span>
+          </div>
+          <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap">
+            <a class="btn" href="https://2025.igem.wiki/patras-med/model" target="_blank" rel="noopener">My modeling page →</a>
+            <a class="btn" href="https://2025.igem.wiki/patras-med/" target="_blank" rel="noopener">Project wiki →</a>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <div class="projects">
+      <div class="card">
+        <div class="stat">NDPI → DICOM</div>
+        <h3 style="margin-top:12px">Pathology DICOM bridge</h3>
+        <p>Windows tool converting whole-slide images to DICOM and sending them to Syngo Carbon via C-STORE. Built during my Siemens Healthineers internship and running in a live hospital.</p>
+      </div>
+      <div class="card">
+        <div class="stat">1st <small>· Harvard CS50x</small></div>
+        <h3 style="margin-top:12px">CS50x Puzzle Day</h3>
+        <p>First place in Harvard's annual team problem-solving competition (2023).</p>
+      </div>
+    </div>
+
+    <h3 class="sub">Coursework projects</h3>
+    <ul class="mini">
+      <li>
+        <a href="https://github.com/YannisBalasis/Data-Mining" target="_blank" rel="noopener">Network intrusion detection</a>
+        <span class="lang">Python</span>
+        <p>Data mining on the TII-SSRC-23 traffic dataset: PCA, K-Means and agglomerative clustering to build reduced datasets, then SVM and neural-network classifiers for binary and multi-class attack detection.</p>
+      </li>
+      <li>
+        <a href="https://github.com/YannisBalasis/DTH" target="_blank" rel="noopener">Chord vs Pastry distributed hash tables</a>
+        <span class="lang">Python</span>
+        <p>Implementations of both DHT protocols with node join/leave, key insert, lookup, update and delete, benchmarked on hop count, latency and key distribution over a 10,000-movie dataset.</p>
+      </li>
+      <li>
+        <a href="https://github.com/YannisBalasis/YN-Meros-B" target="_blank" rel="noopener">Restoring ancient Greek inscriptions with a genetic algorithm</a>
+        <span class="lang">Python</span>
+        <p>Fills missing words in a damaged inscription by evolving candidates whose fitness is TF-IDF cosine similarity to the closest texts in an epigraphic corpus; tuned across ten population/mutation settings.</p>
+      </li>
+    </ul>
+  </section>
+
+  <section id="experience">
+    <h2>Experience</h2>
+
+    <div class="item">
+      <div class="when">Sep 2026 – Feb 2027</div>
+      <div>
+        <h3>Erasmus+ Research Trainee, Computational Pathology</h3>
+        <div class="where">Karolinska Institutet, Dept. of Oncology-Pathology · Stockholm<br>Supervisors: Prof. Johan Hartman, Dr. Balázs Ács</div>
+        <ul>
+          <li>AI-based digital pathology in breast cancer: image-based biomarkers and the tumor immune microenvironment.</li>
+          <li>Whole-slide image pipelines: stain normalization, quality control, TIL and spatial quantification.</li>
+          <li>Foundation models and multiple-instance learning on large clinical cohorts.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="when">Mar – May 2026</div>
+      <div>
+        <h3>Healthcare IT Intern</h3>
+        <div class="where">Siemens Healthineers · Athens</div>
+        <ul>
+          <li>Built and deployed a WSI-to-DICOM conversion and transfer tool (Python, pydicom, pynetdicom, OpenSlide).</li>
+          <li>Clinical data extraction with Oracle SQL and MS SQL Server; full technical documentation.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="when">Mar 2025 – Jun 2026</div>
+      <div>
+        <h3>Master's Thesis Research</h3>
+        <div class="where">University of Patras</div>
+        <ul>
+          <li>Systematic comparison of CNNs, transfer learning and Vision Transformers for 4-class brain tumor MRI.</li>
+          <li>Friedman, Nemenyi and Bonferroni-corrected Wilcoxon tests with Cohen's d across all models.</li>
+          <li>Grad-CAM, SHAP, Integrated Gradients and Occlusion analysis.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="when">Dec 2024 – present</div>
+      <div>
+        <h3>Patras Medicine iGEM — Dry Lab Member → Advisor</h3>
+        <div class="where">University of Patras</div>
+        <ul>
+          <li>ODE and stochastic modeling (COPASI, iBioSim, SimBiology), docking and protein modeling (AlphaFold, SwissDock).</li>
+          <li>Now mentoring the 2026 team on modeling, ML and in silico design.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="education">
+    <h2>Education</h2>
+    <div class="item">
+      <div class="when">2020 – 2026</div>
+      <div>
+        <h3>Diploma (Integrated Master's) in Computer Engineering &amp; Informatics</h3>
+        <div class="where">University of Patras · 5-year programme, 300 ECTS</div>
+        <p style="font-size:15px">Thesis: <em>Machine and Deep Learning Techniques for Brain Tumor Detection and Classification Using MRI</em></p>
+      </div>
+    </div>
+  </section>
+
+  <section id="awards">
+    <h2>Honors</h2>
+    <ul class="awards">
+      <li><strong>iGEM 2025, Paris</strong> — Gold Medal; Best Therapeutics Project (Undergraduate); Top 10 Undergraduate Team. Nominated for Best Wiki, Best Presentation, Best New Composite Part, Best Sustainable Development Impact.</li>
+      <li><strong>Harvard CS50x Puzzle Day</strong> — 1st Place (2023).</li>
+    </ul>
+  </section>
+
+  <section id="skills">
+    <h2>Skills</h2>
+    <dl class="skills">
+      <dt>Medical imaging</dt>
+      <dd><span>MRI</span><span>NIfTI</span><span>U-Net segmentation</span><span>Explainable AI</span></dd>
+      <dt>Digital pathology</dt>
+      <dd><span>Whole-slide images</span><span>Stain normalization</span><span>TIL quantification</span><span>MIL</span><span>Foundation models</span><span>OpenSlide</span><span>DICOM</span></dd>
+      <dt>Deep learning</dt>
+      <dd><span>PyTorch</span><span>TensorFlow</span><span>Keras</span><span>Vision Transformers</span><span>Transfer learning</span></dd>
+      <dt>Programming</dt>
+      <dd><span>Python</span><span>R</span><span>C</span><span>Java</span><span>SQL</span><span>JavaScript</span></dd>
+      <dt>Languages</dt>
+      <dd><span>Greek (native)</span><span>English (advanced)</span><span>German (intermediate)</span></dd>
+    </dl>
+  </section>
+
+</main>
+
+<footer id="contact">
+  <div class="wrap">
+    <p>Get in touch at <a href="mailto:balasisgiannis5@gmail.com">balasisgiannis5@gmail.com</a> · <a href="https://github.com/YannisBalasis">GitHub</a> · <a href="https://linkedin.com/in/ioannis-balasis">LinkedIn</a></p>
+    <p>© <span id="year">2026</span> Ioannis Balasis</p>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+  const root = document.documentElement;
+  try {
+    const saved = localStorage.getItem('theme');
+    if (saved) root.dataset.theme = saved;
+  } catch (e) {}
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    const isDark = root.dataset.theme
+      ? root.dataset.theme === 'dark'
+      : matchMedia('(prefers-color-scheme: dark)').matches;
+    root.dataset.theme = isDark ? 'light' : 'dark';
+    try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
+  });
+</script>
+</body>
+</html>
